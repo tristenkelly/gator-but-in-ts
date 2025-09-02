@@ -1,5 +1,5 @@
-import { setUser } from "./config";
-import { getUser, createUser, resetUsers } from "./lib/db/queries/users";
+import { readConfig, setUser } from "./config";
+import { getUser, createUser, resetUsers, getUsers } from "./lib/db/queries/users";
 
 export type CommandHandler = (cmdName: string, ...args: string[]) => Promise<void>;
 
@@ -68,7 +68,7 @@ export async function handlerRegister(cmdName: string, ...args: string[]) {
 };
 
 
-export async function handlerReset() {
+export async function handlerReset(cmdName: string, ...args: string[]) {
     try {
         await resetUsers();
         console.log("All users deleted.");
@@ -77,5 +77,22 @@ export async function handlerReset() {
     }
 };
 
-
-
+export async function handlerUsers(cmdName: string, ...args: string[]) {
+    try {
+        const users = await getUsers();
+        if (users.length === 0) {
+            console.log("no users found")
+            process.exit(1);
+    }
+        const currentUser = readConfig().current_user_name;
+        users.forEach(user => {
+            if (user.name === currentUser) {
+                console.log(`* ${user.name} (current)`);
+            } else {
+                console.log(`* ${user.name}`);
+            }
+        });
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+}

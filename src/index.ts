@@ -1,10 +1,11 @@
-import { CommandsRegistry, handlerLogin, handlerRegister, handlerReset, registerCommand, runCommand } from "./commands";
+import { CommandsRegistry, handlerLogin, handlerRegister, handlerReset, handlerUsers, registerCommand, runCommand } from "./commands";
 
 async function main() {
     const commands: CommandsRegistry = {};
     registerCommand(commands, "register", handlerRegister);
-    registerCommand(commands, "login", handlerLogin)
-    registerCommand(commands, "reset", handlerReset)
+    registerCommand(commands, "login", handlerLogin);
+    registerCommand(commands, "reset", handlerReset);
+    registerCommand(commands, "users", handlerUsers);
 
     const argv = process.argv.slice(2);
     if (argv.length < 1) {

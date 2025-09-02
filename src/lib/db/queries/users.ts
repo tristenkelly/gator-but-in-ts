@@ -14,4 +14,9 @@ export async function createUser(name: string) {
 
 export async function resetUsers() {
   await db.delete(users).returning();
+};
+
+export async function getUsers() {
+  const results = await db.select().from(users);
+  return results;
 }
