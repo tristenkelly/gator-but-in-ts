@@ -1,18 +1,26 @@
-import { commands, CommandsRegistry, handlerLogin, registerCommand, runCommand } from "./commands";
-import { readConfig, setUser } from "./config";
+import { CommandsRegistry, handlerLogin, handlerRegister, handlerReset, registerCommand, runCommand } from "./commands";
 
 async function main() {
-    const cfg = await readConfig()
-    const commands: CommandsRegistry = {
-    }
+    const commands: CommandsRegistry = {};
+    registerCommand(commands, "register", handlerRegister);
     registerCommand(commands, "login", handlerLogin)
+    registerCommand(commands, "reset", handlerReset)
+
     const argv = process.argv.slice(2);
     if (argv.length < 1) {
-    console.error("not enough arguments");
-    process.exit(1);
+        console.error("Not enough arguments");
+        process.exit(1);
     }
+
     const [cmdName, ...cmdArgs] = argv;
-    runCommand(commands, cmdName, ...cmdArgs);
+
+    try {
+        await runCommand(commands, cmdName, ...cmdArgs);
+        process.exit(0);
+    } catch (err) {
+        console.error("Error running command:", err);
+        process.exit(1);
+    }
 }
 
 main();
