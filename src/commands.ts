@@ -1,4 +1,5 @@
 import { readConfig, setUser } from "./config";
+import { fetchFeed } from "./feed";
 import { getUser, createUser, resetUsers, getUsers } from "./lib/db/queries/users";
 
 export type CommandHandler = (cmdName: string, ...args: string[]) => Promise<void>;
@@ -95,4 +96,9 @@ export async function handlerUsers(cmdName: string, ...args: string[]) {
     } catch (error) {
         console.error("Error fetching users:", error);
     }
-}
+};
+
+export async function handlerAgg(cmdName: string, ...args: string[]) {
+    const feed = await fetchFeed('https://www.wagslane.dev/index.xml');
+    console.log(JSON.stringify(feed, null, 2));
+};
